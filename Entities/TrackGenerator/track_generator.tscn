@@ -1,0 +1,36 @@
+[gd_scene load_steps=3 format=3 uid="uid://dl01ur0o2q7kg"]
+
+[ext_resource type="Script" uid="uid://bbdqdeo2wgfih" path="res://Entities/TrackGenerator/track_generator.gd" id="1_k8wph"]
+
+[sub_resource type="Curve3D" id="Curve3D_k8wph"]
+closed = true
+_data = {
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 12.5, 0, 21.6506, 0, 0, 0, 0, 0, 0, -12.5, 0, 21.6506, 0, 0, 0, 0, 0, 0, -25, 0, 3.06152e-15, 0, 0, 0, 0, 0, 0, -12.5, 0, -21.6506, 0, 0, 0, 0, 0, 0, 12.5, 0, -21.6506, 0, 0, 0, 0, 0, 0, 25, 0, -2.83275e-14),
+"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0)
+}
+point_count = 6
+
+[node name="TrackGenerator" type="Node3D"]
+script = ExtResource("1_k8wph")
+segment_length = 25
+track_points = 6
+track_name = "hexagon_track"
+save_track = true
+
+[node name="TrackPath" type="Path3D" parent="."]
+curve = SubResource("Curve3D_k8wph")
+
+[node name="Track" type="CSGPolygon3D" parent="TrackPath"]
+use_collision = true
+polygon = PackedVector2Array(-0.5, 0, -0.5, 0.05, 0.5, 0.05, 0.5, 0)
+mode = 2
+path_node = NodePath("..")
+path_interval_type = 0
+path_interval = 1.0
+path_simplify_angle = 0.0
+path_rotation = 2
+path_rotation_accurate = false
+path_local = false
+path_continuous_u = true
+path_u_distance = 1.0
+path_joined = false
