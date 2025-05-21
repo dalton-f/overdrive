@@ -5,17 +5,13 @@
 [sub_resource type="Curve3D" id="Curve3D_k8wph"]
 closed = true
 _data = {
-"points": PackedVector3Array(0, 0, 0, 0, 0, 0, 12.5, 0, 21.6506, 0, 0, 0, 0, 0, 0, -12.5, 0, 21.6506, 0, 0, 0, 0, 0, 0, -25, 0, 3.06152e-15, 0, 0, 0, 0, 0, 0, -12.5, 0, -21.6506, 0, 0, 0, 0, 0, 0, 12.5, 0, -21.6506, 0, 0, 0, 0, 0, 0, 25, 0, -2.83275e-14),
-"tilts": PackedFloat32Array(0, 0, 0, 0, 0, 0)
+"points": PackedVector3Array(0, 0, 0, 0, 0, 0, -16, 0, 1.95937e-15, 0, 0, 0, 0, 0, 0, 16, 0, -3.91874e-15),
+"tilts": PackedFloat32Array(0, 0)
 }
-point_count = 6
+point_count = 2
 
 [node name="TrackGenerator" type="Node3D"]
 script = ExtResource("1_k8wph")
-segment_length = 25
-track_points = 6
-track_name = "hexagon_track"
-save_track = true
 
 [node name="TrackPath" type="Path3D" parent="."]
 curve = SubResource("Curve3D_k8wph")

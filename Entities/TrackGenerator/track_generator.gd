@@ -14,6 +14,26 @@ extends Node3D
 		
 		generate_track()
 
+@export_range(0, 100, 5) var variation_factor: int = 5:
+	set(value):
+		variation_factor = value
+		generate_track()
+
+@export_range(0, 5, 1) var height_variation_factor: int = 0:
+	set(value):
+		height_variation_factor = value
+		generate_track()
+
+@export_range(0, 20, 1) var corner_tangent_scale: int = 5:
+	set(value):
+		corner_tangent_scale = value
+		generate_track()
+
+@export var smooth_corners: bool = false:
+	set(value):
+		smooth_corners = value
+		generate_track()
+
 @export_group("Save Settings")
 @export var track_name: String
 
@@ -34,17 +54,42 @@ func generate_track() -> void:
 	# Use TAU to track the change in angle to create a circle
 	var angle_step = TAU / track_points
 	
+	var points := []
+	
 	for i in range(track_points):
 		angle += angle_step
 		
+		var radius := segment_length + randi_range(-variation_factor, variation_factor)
+		
 		# Convert Polar coordinates to Cartesian coordinates
-		var x := segment_length * cos(angle)
-		var z := segment_length * sin(angle)
+		var x := radius * cos(angle)
+		var z := radius * sin(angle)
+		
+		var y := randf_range(-height_variation_factor, height_variation_factor)
 		
 		# Add the generated point to the curve
-		var new_point_position = Vector3(x, 0, z)
-		generated_curve.add_point(new_point_position)
+		points.append(Vector3(x, y, z))
 	
+	if not smooth_corners:
+		for i in range(track_points):
+			var point = points[i]
+			
+			generated_curve.add_point(point)
+			
+	else:
+		for i in range(track_points):
+			var point = points[i]
+				
+			var previousPoint = points[(i - 1 + track_points) % track_points]
+			var nextPoint = points[(i + 1) % track_points]
+			
+			var tangent = (nextPoint - previousPoint).normalized()
+			
+			var in_handle = -tangent * corner_tangent_scale
+			var out_handle = tangent * corner_tangent_scale
+
+			generated_curve.add_point(point, in_handle, out_handle)
+
 	$TrackPath.curve = generated_curve
 
 func save_current_track() -> void:
@@ -85,7 +130,7 @@ func save_current_track() -> void:
 	var result = new_scene.pack(root)
 	
 	# Dynamically generates the file name from the given track name
-	var save_path = "res://Entities/Tracks/%s.tscn" % track_name
+	var save_path = "res://Entities/Tracks/%s.tscn" % track_name.to_snake_case()
 	
 	if result == OK:
 		# Saves the scene
